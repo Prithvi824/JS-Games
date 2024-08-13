@@ -1,6 +1,6 @@
 // Important Imports
 import { lazy, useEffect, useState, Suspense } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 const Points = lazy(() => import("../components/points.tsx"));
 const TicTacToeMain = lazy(() => import("../components/ticTacToeMain.tsx"));
 
@@ -20,6 +20,7 @@ const defaultPlayer: Player = {
 function TicTacToe() {
   // Important Hooks
   const Location = useLocation();
+  const Navigate = useNavigate();
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   // Important States
@@ -89,71 +90,75 @@ function TicTacToe() {
   }
 
   useEffect(() => {
-    const ws = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
+    if (!Location.state?.roomId) {
+      Navigate("/");
+    } else {
+      const ws = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
-    // Connection opened
-    ws.onopen = () => {
-      // Ask the server for player Allotment
-      ws.send(
-        JSON.stringify({
-          type: "connect",
-          roomId: Location.state.roomId,
-        })
-      );
-      console.log("WebSocket connection established");
-    };
+      // Connection opened
+      ws.onopen = () => {
+        // Ask the server for player Allotment
+        ws.send(
+          JSON.stringify({
+            type: "connect",
+            roomId: Location.state.roomId,
+          })
+        );
+        console.log("WebSocket connection established");
+      };
 
-    // Listen for messages
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data as string);
+      // Listen for messages
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data as string);
 
-      if (data.type === "set-player") {
-        setPlayerOne(data.me);
-        setPlayerTwo(data.opponent);
-      }
-
-      if (data.type === "move") {
-        setContext((oldContext) => {
-          return oldContext.map((val, index) => {
-            return index === data.block ? data.player : val;
-          });
-        });
-
-        setPlayerOne((prev) => ({ ...prev, turn: !data.turn }));
-      }
-
-      if (data.type === "ready") {
-        setWaiting(false);
-      }
-
-      if (data.type === "winner") {
-        setContext((oldContext) => {
-          return oldContext.map((val, index) => {
-            return index === data.block ? data.player : val;
-          });
-        });
-
-        setWinner(data.winner);
-        if (data.winner !== "Draw") {
-          setPlayerTwo((prev) => ({ ...prev, points: (prev.points += 1) }));
+        if (data.type === "set-player") {
+          setPlayerOne(data.me);
+          setPlayerTwo(data.opponent);
         }
-      }
 
-      if (data.type === "reset-game") {
-        setContext(Array.from({ length: 9 }).fill("") as string[]);
-        setWinner(null);
-        setWaiting(false);
-      }
-    };
+        if (data.type === "move") {
+          setContext((oldContext) => {
+            return oldContext.map((val, index) => {
+              return index === data.block ? data.player : val;
+            });
+          });
 
-    // Connection closed
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+          setPlayerOne((prev) => ({ ...prev, turn: !data.turn }));
+        }
 
-    // Save the socket instance in state
-    setSocket(ws);
-  }, [Location.state.roomId]);
+        if (data.type === "ready") {
+          setWaiting(false);
+        }
+
+        if (data.type === "winner") {
+          setContext((oldContext) => {
+            return oldContext.map((val, index) => {
+              return index === data.block ? data.player : val;
+            });
+          });
+
+          setWinner(data.winner);
+          if (data.winner !== "Draw") {
+            setPlayerTwo((prev) => ({ ...prev, points: (prev.points += 1) }));
+          }
+        }
+
+        if (data.type === "reset-game") {
+          setContext(Array.from({ length: 9 }).fill("") as string[]);
+          setWinner(null);
+          setWaiting(false);
+        }
+      };
+
+      // Connection closed
+      ws.onclose = () => {
+        console.log("WebSocket connection closed");
+      };
+
+      // Save the socket instance in state
+      setSocket(ws);
+    }
+  }, [Location.state?.roomId, Navigate]);
 
   return (
     <section className="w-11/12 centerize flex-col flex-grow-[0.75] rounded-xl">
@@ -161,7 +166,7 @@ function TicTacToe() {
         <div className="-mt-12 pb-4 flex flex-col justify-center items-center -space-y-2 font-josefin ">
           <h1 className="text-4xl text-black">Tic Tac Toe</h1>
           <p className="text-lg text-black/75">
-            Room id: {Location.state.roomId}
+            Room id: {Location.state?.roomId}
           </p>
         </div>
         <div className="w-full centerize gap-6">
