@@ -40,8 +40,12 @@ const server = http_1.default.createServer(app);
 const wss = new ws_1.WebSocketServer({ server });
 app.use(body_parser_1.default.json());
 if (process.env.NODE_ENV === "development") {
-    const cors_1 = __importDefault(require("cors"));
-    app.use((0, cors_1.default)());
+    Promise.resolve().then(() => __importStar(require("cors"))).then((cors) => {
+        app.use(cors.default());
+    })
+        .catch((err) => {
+        console.error("Failed to load CORS middleware:", err);
+    });
 }
 else if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
@@ -58,9 +62,6 @@ wss.on("connection", (ws) => {
     ws.on("close", () => {
     });
 });
-app.get("/", (req, res) => {
-    return res.send("Hello World");
-});
 app.post("/api/join", (req, res) => {
     const { roomId } = req.body;
     if (roomId in ROOMS && (0, helper_1.checkGameAvailability)(roomId, ROOMS)) {
@@ -76,6 +77,9 @@ app.post("/api/create", (req, res) => {
         success: true,
         roomId: uniqueId,
     });
+});
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, 'public', 'index.html'));
 });
 const PORT = Number(process.env.PORT) || 3000;
 server.listen(PORT, () => {
