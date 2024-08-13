@@ -8,9 +8,6 @@ import * as dotenv from "dotenv";
 import bodyParser from "body-parser";
 import { checkGameAvailability, createUniqueId } from "./helper";
 
-// Development Imports
-import cors from "cors";
-
 // Import Types
 import { globalWsData, User } from "./types/globals";
 import { playTicTacToe } from "./games/TicTactoe";
@@ -28,7 +25,14 @@ app.use(bodyParser.json());
 
 // Development dependencies
 if (process.env.NODE_ENV === "development") {
-  app.use(cors());
+  // Development Imports
+  import("cors")
+    .then((cors) => {
+      app.use(cors.default());
+    })
+    .catch((err) => {
+      console.error("Failed to load CORS middleware:", err);
+    });
 } else if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "public")));
 }
@@ -54,10 +58,6 @@ wss.on("connection", (ws: WebSocket) => {
   });
 });
 
-app.get("/", (req: Request, res: Response) => {
-  return res.send("Hello World");
-});
-
 app.post("/api/join", (req: Request, res: Response) => {
   const { roomId }: { roomId: string } = req.body;
 
@@ -77,6 +77,10 @@ app.post("/api/create", (req: Request, res: Response) => {
     success: true,
     roomId: uniqueId,
   });
+});
+
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT: number = Number(process.env.PORT) || 3000;

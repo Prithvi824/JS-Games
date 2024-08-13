@@ -30,6 +30,7 @@ export function checkGameAvailability(
 ): boolean {
   // Check if there is only One player in the room
   // Return true if there is one else false
+
   if (roomId.startsWith("1-") && ROOMS[roomId].length < 2) {
     return true;
   } else return false;
