@@ -32,7 +32,7 @@ function TicTacToeMain({
   const dots = ".".repeat(dotCount);
 
   return (
-    <div className="w-1/4 h-96 bg-white centerize rounded-2xl p-4 relative overflow-hidden">
+    <div className="w-1/4 h-96 bg-white centerize rounded-2xl p-4 relative overflow-hidden thousandPx:w-11/12">
       {turn && (
         <div className="absolute top-2 right-2 w-10">
           <Lottie animationData={turnRipple} loop={true}></Lottie>

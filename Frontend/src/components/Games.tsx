@@ -107,7 +107,7 @@ function Games({ gamesList }: { gamesList: GamesList }) {
 
   return (
     <div className="w-full p-4 flex justify-start items-center">
-      <div className="flex justify-start flex-wrap gap-4">
+      <div className="flex justify-start flex-wrap gap-4 items-center thousandPx:justify-center">
         {inputOpen && (
           <div
             className="absolute top-1/2 left-1/2 w-[400px] rounded-lg bg-[#2D3250] z-10 -translate-x-1/2 -translate-y-1/2"

@@ -66,12 +66,12 @@ function Points({ nameOne, pointsOne, nameTwo, pointsTwo, turn }: PointsProps) {
   }, [turn, greyColor, greenColor]);
 
   return (
-    <div className="w-2/4 h-96 bg-[#7FA1C3] rounded-2xl p-4 flex justify-evenly">
+    <div className="w-2/4 h-96 bg-[#7FA1C3] rounded-2xl p-4 flex justify-evenly thousandPx:w-11/12">
       <div className="border-r-2 border-black w-1/2 flex justify-center">
         <div className="min-h-full w-full flex flex-col">
           <div className="border-black border-b-2 flex justify-center items-center text-center">
-            <h1 className="text-2xl font-notoSans text-black ">{nameOne}</h1>
-            <div className="w-12 text-red-500">
+            <h1 className="text-2xl font-notoSans text-black fiveHundredPx:text-base">{nameOne}</h1>
+            <div className="w-12 text-red-500 fiveHundredPx:w-8">
               <Lottie animationData={rippleOne} color="#7FA1C3" />
             </div>
           </div>
@@ -94,8 +94,8 @@ function Points({ nameOne, pointsOne, nameTwo, pointsTwo, turn }: PointsProps) {
       <div className="w-1/2 flex justify-center">
         <div className="min-h-full w-full flex flex-col">
           <div className="border-black border-b-2 flex justify-center items-center text-center">
-            <h1 className="text-2xl font-notoSans text-black ">{nameTwo}</h1>
-            <div className="w-12 text-red-500">
+            <h1 className="text-2xl font-notoSans text-black fiveHundredPx:text-base">{nameTwo}</h1>
+            <div className="w-12 text-red-500 fiveHundredPx:w-8">
               <Lottie animationData={rippleTwo} color="#7FA1C3" />
             </div>
           </div>

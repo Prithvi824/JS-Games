@@ -15,13 +15,13 @@ function Nav(properties: Properties) {
               <img
                 src={`/${properties.leftIcon}`}
                 alt="Console"
-                className="w-12"
+                className="w-12 fiveHundredPx:w-10"
               />
             </div>
-            <div className="-mb-2">{properties.leftName}</div>
+            <div className="-mb-2 fiveHundredPx:text-sm fiveHundredPx:-mt-2">{properties.leftName}</div>
           </div>
 
-          <div className=" flex justify-evenly items-center space-x-6 ">
+          <div className="flex justify-evenly items-center space-x-6 fiveHundredPx:text-sm">
             {properties.rightName.map((name, index) => {
               return <p className="hover:border-b-2 cursor-pointer" key={index}>{name}</p>;
             })}

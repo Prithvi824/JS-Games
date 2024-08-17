@@ -163,13 +163,13 @@ function TicTacToe() {
   return (
     <section className="w-11/12 centerize flex-col flex-grow-[0.75] rounded-xl">
       <div className="bg-c-blue p-2 w-11/12 centerize flex-col flex-grow-[0.75] rounded-xl">
-        <div className="-mt-12 pb-4 flex flex-col justify-center items-center -space-y-2 font-josefin ">
+        <div className="-mt-12 pb-4 flex flex-col justify-center items-center -space-y-2 font-josefin thousandPx:m-0">
           <h1 className="text-4xl text-black">Tic Tac Toe</h1>
           <p className="text-lg text-black/75">
             Room id: {Location.state?.roomId}
           </p>
         </div>
-        <div className="w-full centerize gap-6">
+        <div className="w-full centerize gap-6 thousandPx:flex-col ">
           <Suspense fallback={<div>Loading</div>}>
             <TicTacToeMain
               winner={winner}
